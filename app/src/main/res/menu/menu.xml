@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Item1"
+        android:id="@+id/daemon_status"
+        android:enabled="false"/>
+    <item android:title="Start"
+        android:id="@+id/daemon_start"/>
+    <item android:title="Stop"
+        android:id="@+id/daemon_stop"/>
+    <item android:title="Restart"
+        android:id="@+id/daemon_restart"/>
+</menu>
