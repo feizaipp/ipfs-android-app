@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,34 +17,56 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
+
+import java.util.Map;
 
 public class Main2Activity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    Button start_daemon;
-    TextView tvLog;
     Menu mMenu;
     boolean daemon_started = false;
+    Button btn;
 
-    @Override
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+                    Map id = (Map) msg.obj;
+                    Log.d(TAG, id.toString());
+                    try {
+                        JSONObject object = new JSONObject(id);
+                        String name = object.getString("ID");
+                        Log.d(TAG, name);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    };
+
+    Button.OnClickListener listener = new Button.OnClickListener() {
+        public void onClick(View v){
+            IPFSHttpAPI api = new IPFSHttpAPI(mHandler);
+            api.getPeerID();
+        }
+    };
+
+
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        btn = (Button)findViewById(R.id.button2);
+        btn.setOnClickListener(listener);
 
-        start_daemon = (Button)findViewById(R.id.btntest);
-        tvLog = (TextView)findViewById(R.id.tvlog);
-        start_daemon.setOnClickListener(listener);
-        if (!daemon_started)
+        if (!daemon_started) {
             CmdIntentService.startActionDaemon(Main2Activity.this);
-    }
-
-    Button.OnClickListener listener = new Button.OnClickListener(){
-
-        public void onClick(View v){
-            CmdIntentService.startActionDaemon(Main2Activity.this);
-            Log.d(TAG, "ipfstest");
         }
-    };
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,6 +109,8 @@ public class Main2Activity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(true);
                 mMenu.findItem(R.id.daemon_restart).setVisible(true);
                 daemon_started = true;
+                //IPFSHttpAPI api = new IPFSHttpAPI(mHandler);
+                //api.getPeerID();
                 break;
             case stopped:
                 mMenu.findItem(R.id.daemon_status).setTitle("IPFS没有运行");
@@ -113,7 +140,6 @@ public class Main2Activity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void MessageEvent(ExecLog event) {
-        tvLog.append(event.log + "\n");
         if (event.log.contains("shutdown")) {
             CmdIntentService.startActionDaemon(this);
         }
