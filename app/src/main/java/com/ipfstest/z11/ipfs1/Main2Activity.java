@@ -32,7 +32,7 @@ public class Main2Activity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case 1:
+                case IPFSHttpAPI.HTTP_API_GET_PEERS_ID:
                     Map id = (Map) msg.obj;
                     Log.d(TAG, id.toString());
                     try {
@@ -43,6 +43,10 @@ public class Main2Activity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     break;
+
+                case IPFSHttpAPI.HTTP_API_GET_PINS:
+
+                    break;
             }
         }
     };
@@ -50,7 +54,8 @@ public class Main2Activity extends AppCompatActivity {
     Button.OnClickListener listener = new Button.OnClickListener() {
         public void onClick(View v){
             IPFSHttpAPI api = new IPFSHttpAPI(mHandler);
-            api.getPeerID();
+            //api.getPeerID();
+            api.getPins();
         }
     };
 
