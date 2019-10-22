@@ -9,4 +9,6 @@
         android:id="@+id/daemon_stop"/>
     <item android:title="Restart"
         android:id="@+id/daemon_restart"/>
+    <item android:title="文件"
+        android:id="@+id/files"/>
 </menu>
