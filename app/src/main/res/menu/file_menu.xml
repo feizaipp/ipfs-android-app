@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="添加文件"
+        android:id="@+id/add_file"/>
+    <item android:title="添加目录"
+        android:id="@+id/add_folder"/>
+</menu>

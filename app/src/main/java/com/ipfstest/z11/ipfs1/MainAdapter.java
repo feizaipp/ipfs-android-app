@@ -37,6 +37,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        if (mData == null)
+            return;
         // 绑定数据
         String s1 = mData.keySet().toArray()[position].toString();
         String s2 = mData.get(s1);

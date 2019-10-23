@@ -12,6 +12,7 @@ import java.util.Map;
 import android.os.Handler;
 
 import io.ipfs.api.IPFS;
+import io.ipfs.api.Peer;
 import io.ipfs.multiaddr.MultiAddress;
 import io.ipfs.multihash.Multihash;
 
@@ -20,7 +21,8 @@ public class IPFSHttpAPI {
     public static final int HTTP_API_BASE = 0;
     public static final int HTTP_API_GET_PEERS_ID = HTTP_API_BASE + 1;
     public static final int HTTP_API_GET_PINS = HTTP_API_BASE + 2;
-    private Map id = null;
+    public static final int HTTP_API_GET_SWARM_PEERS = HTTP_API_BASE + 3;
+    public static final int HTTP_API_GET_SWARM_PEERS_COUNT = HTTP_API_BASE + 4;
 
     private Handler handler;
 
@@ -49,27 +51,6 @@ public class IPFSHttpAPI {
         t.start();
     }
 
-    public Map getPeerID(int status) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
-                try {
-                    id = ipfs.id();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        t.start();
-        try {
-            t.join();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return id;
-    }
-
     public void getPins() {
         Thread t = new Thread(new Runnable() {
             @Override
@@ -81,6 +62,46 @@ public class IPFSHttpAPI {
                     Message msg = Message.obtain();
                     msg.what = HTTP_API_GET_PINS;
                     msg.obj = pins;
+                    handler.sendMessage(msg);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void getSwarmPeers() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
+                try {
+                    List<Peer> peers = ipfs.swarm.peers();
+                    Message msg = Message.obtain();
+                    msg.what = HTTP_API_GET_SWARM_PEERS;
+                    msg.obj = peers;
+                    handler.sendMessage(msg);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void getSwarmPeersCount() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
+                try {
+                    List<Peer> peers = ipfs.swarm.peers();
+                    Message msg = Message.obtain();
+                    msg.what = HTTP_API_GET_SWARM_PEERS_COUNT;
+                    msg.obj = peers.size();
                     handler.sendMessage(msg);
 
                 } catch (IOException e) {
