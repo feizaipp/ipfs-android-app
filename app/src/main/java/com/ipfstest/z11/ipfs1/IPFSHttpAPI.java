@@ -20,6 +20,7 @@ public class IPFSHttpAPI {
     public static final int HTTP_API_BASE = 0;
     public static final int HTTP_API_GET_PEERS_ID = HTTP_API_BASE + 1;
     public static final int HTTP_API_GET_PINS = HTTP_API_BASE + 2;
+    private Map id = null;
 
     private Handler handler;
 
@@ -46,6 +47,27 @@ public class IPFSHttpAPI {
             }
         });
         t.start();
+    }
+
+    public Map getPeerID(int status) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
+                try {
+                    id = ipfs.id();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+        try {
+            t.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return id;
     }
 
     public void getPins() {

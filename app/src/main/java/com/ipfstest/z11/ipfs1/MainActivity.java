@@ -50,19 +50,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Map<String, String> getData() {
-        String json = "{\n" +
-                "\t\"ID\": \"QmXzYkFL93SVgteZJr2TtXNozaariQvPX6sEZe1Hb4EjAE\",\n" +
-                "\t\"PublicKey\": \"CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDJ+f2hI30g0fto2vF8+W32WM8ehFxjqRm/oJXosqf7VOI8we1/0R/gO1MlcdWiUDCk0BJfZSc5tTS2thLevaMhZTLNfHyS5KALMd65gBmAKQa+kZqtHvQpmIk6Er+ZrpcG4HQvXR4sAF0LScFL6dbWWEtPpG4vATS9XCj9+gXb69EOgxqm71q28a/2YUOtTd9kk9ANHVGv3vlT8jATOyA5ZL4ZaKxrLXjkAw1yS+rMTK1i11uc8VeSjWHBZPMEtrEU/yXRhC/idJba6IoQk8JS6sTM6cD2V+9Obm4Y5u6wfPg0rezVhF9DKbmeDR0ZkJKz0AEkq2JT/xglkd5RieErAgMBAAE=\",\n" +
-                "\t\"Addresses\": [\n" +
-                "\t\t\"/ip4/127.0.0.1/tcp/4001/ipfs/QmXzYkFL93SVgteZJr2TtXNozaariQvPX6sEZe1Hb4EjAE\",\n" +
-                "\t\t\"/ip4/192.168.3.89/tcp/4001/ipfs/QmXzYkFL93SVgteZJr2TtXNozaariQvPX6sEZe1Hb4EjAE\",\n" +
-                "\t\t\"/ip4/192.168.122.1/tcp/4001/ipfs/QmXzYkFL93SVgteZJr2TtXNozaariQvPX6sEZe1Hb4EjAE\",\n" +
-                "\t\t\"/ip6/::1/tcp/4001/ipfs/QmXzYkFL93SVgteZJr2TtXNozaariQvPX6sEZe1Hb4EjAE\"\n" +
-                "\t],\n" +
-                "\t\"AgentVersion\": \"go-ipfs/0.4.22/\",\n" +
-                "\t\"ProtocolVersion\": \"ipfs/0.1.0\"\n" +
-                "}";
-
+        IPFSHttpAPI api = new IPFSHttpAPI(null);
+        Map id = api.getPeerID(0);
+        String json = id.toString();
 
         Map<String, String> map = new HashMap<String, String>();
         try {
@@ -118,8 +108,6 @@ public class MainActivity extends AppCompatActivity {
         if (!daemon_started) {
             CmdIntentService.startActionDaemon(MainActivity.this);
         }
-        initData();
-        initView();
     }
 
     @Override
@@ -173,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_restart).setVisible(true);
                 mMenu.findItem(R.id.files).setVisible(true);
                 daemon_started = true;
+                initData();
+                initView();
                 //IPFSHttpAPI api = new IPFSHttpAPI(mHandler);
                 //api.getPeerID();
                 break;

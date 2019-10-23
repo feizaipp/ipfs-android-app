@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     private Map<String, String> mData;
-    private final static String TAG = "MyAdapter1";
+    private final static String TAG = "MainAdapter";
 
     public MainAdapter(Map<String, String> data) {
         this.mData = data;
