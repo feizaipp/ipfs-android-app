@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,8 +49,22 @@ public class FilesActivity extends CheckPermissionsActivity {
         @Override
         public void onFileSelect(int requestCode, List<String> paths) {
             Log.d(TAG, "requestCode: " + requestCode);
-            for (int i=0; i<paths.size(); i++) {
-                Log.d(TAG, paths.get(i));
+            switch (requestCode) {
+                case 1:
+                    for (int i=0; i<paths.size(); i++) {
+                        File file = new File(paths.get(i));
+                        String name = file.getName();
+                        Log.d(TAG, name);
+                    }
+                    break;
+
+                case 4:
+                    for (int i=0; i<paths.size(); i++) {
+                        File file = new File(paths.get(i));
+                        String name = file.getName();
+                        Log.d(TAG, name);
+                    }
+                    break;
             }
         }
     };

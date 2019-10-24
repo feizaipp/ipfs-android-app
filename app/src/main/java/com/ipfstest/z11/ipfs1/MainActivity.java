@@ -1,5 +1,6 @@
 package com.ipfstest.z11.ipfs1;
 
+import androidx.annotation.IntDef;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +12,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private MainAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private final Timer mTimer = new Timer();
+    private TextView tv_status;
+    private TextView tv_info;
 
     private void initData() {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -51,12 +56,10 @@ public class MainActivity extends AppCompatActivity {
         try {
             JSONObject object = new JSONObject(id);
             JSONArray array = new JSONArray(object.getString("Addresses"));
-            Log.d(TAG, array.toString());
             String addr = "";
             for (int i = 0; i < array.length(); i++) {
                 addr += array.get(i) + "\n";
             }
-            Log.d(TAG, addr);
             map.put("ID", object.getString("ID"));
             map.put("PublicKey", object.getString("PublicKey"));
             map.put("Addresses", addr);
@@ -75,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case IPFSHttpAPI.HTTP_API_GET_PEERS_ID:
                     Map id = (Map) msg.obj;
-                    Log.d(TAG, id.toString());
                     try {
                         mAdapter.updateData(getData(id));
                     } catch (Exception e) {
@@ -92,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case IPFSHttpAPI.HTTP_API_GET_SWARM_PEERS_COUNT:
-
+                    int count = (int)msg.obj;
+                    tv_info.setText("Discovered " + count);
                     break;
             }
         }
@@ -105,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             mHttpApi.getSwarmPeers();
+            Log.d(TAG, "timer");
         }
     };
 
@@ -112,12 +116,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        tv_status = findViewById(R.id.status);
+        tv_info = findViewById(R.id.info);
 
-        if (!daemon_started) {
-            CmdIntentService.startActionDaemon(MainActivity.this);
-        }
         initData();
         initView();
+
+        Log.d(TAG, "onCreate");
     }
 
     @Override
@@ -129,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
         mMenu.findItem(R.id.daemon_stop).setVisible(true);
         mMenu.findItem(R.id.daemon_restart).setVisible(true);
         mMenu.findItem(R.id.files).setVisible(true);
+        Log.d(TAG, "" + daemon_started);
+        if (!daemon_started) {
+            CmdIntentService.startActionDaemon(MainActivity.this);
+        }
         return true;
     }
 
@@ -171,8 +180,12 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_restart).setVisible(true);
                 mMenu.findItem(R.id.files).setVisible(true);
                 daemon_started = true;
+                mTimer.schedule(mTimerTask, 2000, 3000);
                 mHttpApi.getPeerID();
                 mHttpApi.getSwarmPeersCount();
+                tv_status.setText("Connected to IPFS");
+                tv_status.setVisibility(View.VISIBLE);
+                tv_info.setVisibility(View.VISIBLE);
                 break;
             case stopped:
                 mMenu.findItem(R.id.daemon_status).setTitle("IPFS没有运行");
@@ -212,12 +225,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        mTimer.schedule(mTimerTask, 3000);
+        if (daemon_started) {
+            mTimer.schedule(mTimerTask, 2000, 3000);
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+        mTimer.cancel();
     }
 }

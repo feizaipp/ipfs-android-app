@@ -5,6 +5,7 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.Map;
 import android.os.Handler;
 
 import io.ipfs.api.IPFS;
+import io.ipfs.api.MerkleNode;
+import io.ipfs.api.NamedStreamable;
 import io.ipfs.api.Peer;
 import io.ipfs.multiaddr.MultiAddress;
 import io.ipfs.multihash.Multihash;
@@ -37,7 +40,6 @@ public class IPFSHttpAPI {
                 IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
                 try {
                     Map id = ipfs.id();
-                    Log.d(TAG, id.toString());
                     Message msg = Message.obtain();
                     msg.what = HTTP_API_GET_PEERS_ID;
                     msg.obj = id;
@@ -102,6 +104,27 @@ public class IPFSHttpAPI {
                     Message msg = Message.obtain();
                     msg.what = HTTP_API_GET_SWARM_PEERS_COUNT;
                     msg.obj = peers.size();
+                    handler.sendMessage(msg);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void add_folder() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
+                try {
+                    NamedStreamable.FileWrapper file = new NamedStreamable.FileWrapper(new File("hello.txt"));
+                    MerkleNode addResult = ipfs.add(file).get(0);
+                    Message msg = Message.obtain();
+                    msg.what = HTTP_API_GET_SWARM_PEERS_COUNT;
+                    msg.obj = addResult;
                     handler.sendMessage(msg);
 
                 } catch (IOException e) {
