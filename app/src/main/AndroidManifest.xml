@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FilesActivity"></activity>
+        <activity android:name=".CheckPermissionsActivity"></activity>
+        <activity android:name=".FilesActivity" />
 
         <service
             android:name=".CmdIntentService"
