@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     Menu mMenu;
-    boolean daemon_started = false;
     private RecyclerView mRecyclerView;
     private MainAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -96,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 case IPFSHttpAPI.HTTP_API_GET_SWARM_PEERS_COUNT:
                     int count = (int)msg.obj;
                     tv_info.setText("Discovered " + count);
+                    mTimer.schedule(mTimerTask, 2000, 3000);
                     break;
             }
         }
@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             mHttpApi.getSwarmPeers();
             Log.d(TAG, "timer");
+            mTimer.cancel();
         }
     };
 
@@ -134,8 +135,7 @@ public class MainActivity extends AppCompatActivity {
         mMenu.findItem(R.id.daemon_stop).setVisible(true);
         mMenu.findItem(R.id.daemon_restart).setVisible(true);
         mMenu.findItem(R.id.files).setVisible(true);
-        Log.d(TAG, "" + daemon_started);
-        if (!daemon_started) {
+        if (!ProcessUtils.daemonStarted(MainActivity.this)) {
             CmdIntentService.startActionDaemon(MainActivity.this);
         }
         return true;
@@ -179,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(true);
                 mMenu.findItem(R.id.daemon_restart).setVisible(true);
                 mMenu.findItem(R.id.files).setVisible(true);
-                daemon_started = true;
                 mTimer.schedule(mTimerTask, 2000, 3000);
                 mHttpApi.getPeerID();
                 mHttpApi.getSwarmPeersCount();
@@ -193,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(false);
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
-                daemon_started = false;
                 break;
             case starting:
                 mMenu.findItem(R.id.daemon_status).setTitle("IPFS is starting");
@@ -201,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(false);
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
-                daemon_started = false;
                 break;
             case stopping:
                 mMenu.findItem(R.id.daemon_status).setTitle("IPFS is stopping");
@@ -209,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(false);
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
-                daemon_started = false;
                 break;
         }
     }
@@ -225,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        if (daemon_started) {
+        if (ProcessUtils.daemonStarted(MainActivity.this)) {
             mTimer.schedule(mTimerTask, 2000, 3000);
         }
     }

@@ -8,12 +8,17 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 
 public class IpfsExec {
     private Context context;
@@ -66,6 +71,8 @@ public class IpfsExec {
             if (log.equals("Daemon is ready")) {
                 daemon.close();
                 Log.d(TAG, "Daemon is ready");
+                String pid = getProcessId(exec);
+                savePID(pid);
                 return true;
             }
         }
@@ -126,5 +133,32 @@ public class IpfsExec {
         String command = Constants.Dir.getLocalDir(context) + "/ipfsNode " + cmd;
         Process exec = Runtime.getRuntime().exec(command, envp);
         return exec;
+    }
+
+    private String getProcessId(Process process) {
+        long pid = -1;
+        Field field = null;
+
+        try {
+            Class<?> clazz = Class.forName("java.lang.UNIXProcess");
+            field = clazz.getDeclaredField("pid");
+            field.setAccessible(true);
+            pid = (Integer) field.get(process);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return String.valueOf(pid);
+    }
+
+    private void savePID(String pid) {
+        try {
+            File file = new File(Constants.Dir.getLocalDir(context) + "/.pid");
+            BufferedWriter write = new BufferedWriter(new FileWriter(file));
+            write.write(pid);
+            write.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
