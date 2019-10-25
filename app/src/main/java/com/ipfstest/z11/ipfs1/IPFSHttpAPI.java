@@ -26,6 +26,7 @@ public class IPFSHttpAPI {
     public static final int HTTP_API_GET_PINS = HTTP_API_BASE + 2;
     public static final int HTTP_API_GET_SWARM_PEERS = HTTP_API_BASE + 3;
     public static final int HTTP_API_GET_SWARM_PEERS_COUNT = HTTP_API_BASE + 4;
+    public static final int HTTP_API_GET_REPO_STAT = HTTP_API_BASE + 5;
 
     private Handler handler;
 
@@ -125,6 +126,26 @@ public class IPFSHttpAPI {
                     Message msg = Message.obtain();
                     msg.what = HTTP_API_GET_SWARM_PEERS_COUNT;
                     msg.obj = addResult;
+                    handler.sendMessage(msg);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void getRepoStat() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
+                try {
+                    Map stat = ipfs.repo.stat();
+                    Message msg = Message.obtain();
+                    msg.what = HTTP_API_GET_REPO_STAT;
+                    msg.obj = stat;
                     handler.sendMessage(msg);
 
                 } catch (IOException e) {
