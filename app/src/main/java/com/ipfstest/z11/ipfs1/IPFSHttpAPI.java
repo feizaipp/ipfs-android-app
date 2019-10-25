@@ -27,6 +27,7 @@ public class IPFSHttpAPI {
     public static final int HTTP_API_GET_SWARM_PEERS = HTTP_API_BASE + 3;
     public static final int HTTP_API_GET_SWARM_PEERS_COUNT = HTTP_API_BASE + 4;
     public static final int HTTP_API_GET_REPO_STAT = HTTP_API_BASE + 5;
+    public static final int HTTP_API_ADD_FILES = HTTP_API_BASE + 6;
 
     private Handler handler;
 
@@ -115,16 +116,16 @@ public class IPFSHttpAPI {
         t.start();
     }
 
-    public void add_folder() {
+    public void add_files(String path, boolean pin) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
                 try {
-                    NamedStreamable.FileWrapper file = new NamedStreamable.FileWrapper(new File("hello.txt"));
-                    MerkleNode addResult = ipfs.add(file).get(0);
+                    NamedStreamable.FileWrapper file = new NamedStreamable.FileWrapper(new File(path));
+                    List<MerkleNode> addResult = ipfs.add(file);
                     Message msg = Message.obtain();
-                    msg.what = HTTP_API_GET_SWARM_PEERS_COUNT;
+                    msg.what = HTTP_API_ADD_FILES;
                     msg.obj = addResult;
                     handler.sendMessage(msg);
 
