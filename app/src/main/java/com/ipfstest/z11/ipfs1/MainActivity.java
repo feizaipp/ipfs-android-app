@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 case IPFSHttpAPI.HTTP_API_GET_SWARM_PEERS_COUNT:
                     int count = (int)msg.obj;
                     tv_info.setText("Discovered " + count);
-                    mTimer.schedule(mTimerTask, 2000, 3000);
+                    //mTimer.schedule(mTimerTask, 2000, 3000);
                     break;
             }
         }
@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         EventBus.getDefault().register(this);
         if (ProcessUtils.daemonStarted(MainActivity.this)) {
-            mTimer.schedule(mTimerTask, 2000, 3000);
+            //mTimer.schedule(mTimerTask, 2000, 3000);
         }
     }
 
@@ -230,6 +230,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-        mTimer.cancel();
+        //mTimer.cancel();
     }
 }

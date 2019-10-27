@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,9 +20,11 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import cn.wandersnail.fileselector.FileSelector;
 import cn.wandersnail.fileselector.OnFileSelectListener;
+import io.ipfs.api.MerkleNode;
 
 public class FilesActivity extends CheckPermissionsActivity {
 
@@ -34,6 +38,48 @@ public class FilesActivity extends CheckPermissionsActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private static final String TAG = "FilesActivity";
     FileSelector selector;
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case IPFSHttpAPI.HTTP_API_GET_PEERS_ID:
+
+                    break;
+
+                case IPFSHttpAPI.HTTP_API_GET_PINS:
+
+                    break;
+
+                case IPFSHttpAPI.HTTP_API_GET_SWARM_PEERS:
+
+                    break;
+
+                case IPFSHttpAPI.HTTP_API_GET_SWARM_PEERS_COUNT:
+                    break;
+
+                case IPFSHttpAPI.HTTP_API_ADD_FILE:
+                    List<MerkleNode> files = (List<MerkleNode>)msg.obj;
+                    for (int i=0; i<files.size(); i++) {
+                        Log.d(TAG, files.get(i).toJSONString());
+                    }
+                    break;
+
+                case IPFSHttpAPI.HTTP_API_ADD_DIR:
+                    List<MerkleNode> dirs = (List<MerkleNode>)msg.obj;
+                    for (int i=0; i<dirs.size(); i++) {
+                        Log.d(TAG, dirs.get(i).toJSONString());
+                    }
+                    break;
+            }
+        }
+    };
+
+    IPFSHttpAPI mHttpApi = new IPFSHttpAPI(mHandler);
+
+    private void addFileInfoToDB(List<MerkleNode> addResult) {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +97,20 @@ public class FilesActivity extends CheckPermissionsActivity {
             Log.d(TAG, "requestCode: " + requestCode);
             switch (requestCode) {
                 case 1:
-                    for (int i=0; i<paths.size(); i++) {
+                    for (int i = 0; i < paths.size(); i++) {
                         File file = new File(paths.get(i));
                         String name = file.getName();
                         Log.d(TAG, name);
+                        mHttpApi.add_files(paths.get(i), false, 0);
                     }
                     break;
 
                 case 4:
-                    for (int i=0; i<paths.size(); i++) {
+                    for (int i = 0; i < paths.size(); i++) {
                         File file = new File(paths.get(i));
                         String name = file.getName();
                         Log.d(TAG, name);
+                        mHttpApi.add_files(paths.get(i), false, 1);
                     }
                     break;
             }
@@ -111,7 +159,7 @@ public class FilesActivity extends CheckPermissionsActivity {
         values.put("name", fe.getName());
         values.put("hash", fe.getHash());
         values.put("size", fe.getSize());
-        database.insert("student", null, values);
+        database.insert(TABALENAME, null, values);
         database.close();
     }
 
@@ -119,7 +167,7 @@ public class FilesActivity extends CheckPermissionsActivity {
         FilesSQLiteOpenHelper mysql = new FilesSQLiteOpenHelper(this, DBNAME, 1);
         SQLiteDatabase database = mysql.getWritableDatabase();
 
-        for (int i=0; i<aFe.size(); i++) {
+        for (int i = 0; i < aFe.size(); i++) {
             ContentValues values = new ContentValues();
             values.put("name", aFe.get(i).getName());
             values.put("hash", aFe.get(i).getHash());
@@ -135,13 +183,14 @@ public class FilesActivity extends CheckPermissionsActivity {
         aFe.clear();
         FilesSQLiteOpenHelper mysql = new FilesSQLiteOpenHelper(this, DBNAME, 1);
         SQLiteDatabase database = mysql.getWritableDatabase();
-        Cursor cursor = database.query(TABALENAME,null,null,null,null,null,null);
+        Cursor cursor = database.query(TABALENAME, null, null, null, null, null, null);
         cursor.moveToFirst();
         do {
             String name = cursor.getString(cursor.getColumnIndex("name"));
             String hash = cursor.getString(cursor.getColumnIndex("hash"));
             String size = cursor.getString(cursor.getColumnIndex("size"));
-            FilesEntry fe = new FilesEntry(name, hash, size);
+            String path = cursor.getString(cursor.getColumnIndex("path"));
+            FilesEntry fe = new FilesEntry(name, hash, size, path);
             aFe.add(fe);
         } while (cursor.moveToNext());
         database.close();
