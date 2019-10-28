@@ -1,9 +1,13 @@
-package com.ipfstest.z11.ipfs1;
+package com.ipfstest.z11.ipfs1.service;
 
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.ipfstest.z11.ipfs1.common.ExecLog;
+import com.ipfstest.z11.ipfs1.utils.Constants;
+import com.ipfstest.z11.ipfs1.utils.PropertyUtils;
 
 import org.greenrobot.eventbus.EventBus;
 

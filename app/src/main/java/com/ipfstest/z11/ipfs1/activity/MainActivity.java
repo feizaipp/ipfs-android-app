@@ -1,4 +1,4 @@
-package com.ipfstest.z11.ipfs1;
+package com.ipfstest.z11.ipfs1.activity;
 
 import androidx.annotation.IntDef;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import com.ipfstest.z11.ipfs1.R;
+import com.ipfstest.z11.ipfs1.adapter.MainAdapter;
+import com.ipfstest.z11.ipfs1.api.IPFSHttpAPI;
+import com.ipfstest.z11.ipfs1.common.DaemonStatus;
+import com.ipfstest.z11.ipfs1.common.ExecLog;
+import com.ipfstest.z11.ipfs1.common.MyDividerItemDecoration;
+import com.ipfstest.z11.ipfs1.common.Status;
+import com.ipfstest.z11.ipfs1.service.CmdIntentService;
+import com.ipfstest.z11.ipfs1.utils.ProcessUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -171,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void MessageEvent(DaemonStatus mDS) {
-        SERVICE_STATUS ds = mDS.getDaemonStatus();
+        Status ds = mDS.getDaemonStatus();
         switch (ds) {
             case started:
                 mMenu.findItem(R.id.daemon_status).setTitle("IPFS运行中");

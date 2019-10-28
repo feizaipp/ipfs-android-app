@@ -1,4 +1,4 @@
-package com.ipfstest.z11.ipfs1;
+package com.ipfstest.z11.ipfs1.common;
 
 public class FilesEntry {
     private String name;

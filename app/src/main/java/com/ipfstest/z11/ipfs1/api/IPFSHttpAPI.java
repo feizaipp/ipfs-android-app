@@ -1,4 +1,4 @@
-package com.ipfstest.z11.ipfs1;
+package com.ipfstest.z11.ipfs1.api;
 
 import android.os.Bundle;
 import android.os.Message;

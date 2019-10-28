@@ -1,4 +1,4 @@
-package com.ipfstest.z11.ipfs1;
+package com.ipfstest.z11.ipfs1.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +16,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.ipfstest.z11.ipfs1.R;
+import com.ipfstest.z11.ipfs1.activity.CheckPermissionsActivity;
+import com.ipfstest.z11.ipfs1.adapter.FileAdapter;
+import com.ipfstest.z11.ipfs1.api.IPFSHttpAPI;
+import com.ipfstest.z11.ipfs1.common.FilesEntry;
+import com.ipfstest.z11.ipfs1.common.FilesSQLiteOpenHelper;
+import com.ipfstest.z11.ipfs1.common.MyDividerItemDecoration;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.ipfstest.z11.ipfs1;
+package com.ipfstest.z11.ipfs1.common;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

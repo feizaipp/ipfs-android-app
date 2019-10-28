@@ -1,10 +1,13 @@
-package com.ipfstest.z11.ipfs1;
+package com.ipfstest.z11.ipfs1.service;
 
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
+
+import com.ipfstest.z11.ipfs1.common.DaemonStatus;
+import com.ipfstest.z11.ipfs1.common.Status;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -90,25 +93,25 @@ public class CmdIntentService extends IntentService {
     private void daemon() throws IOException {
         boolean stat = false;
         IpfsExec.getInstance(getBaseContext()).init();
-        EventBus.getDefault().post(new DaemonStatus(SERVICE_STATUS.starting));
+        EventBus.getDefault().post(new DaemonStatus(Status.starting));
         stat = IpfsExec.getInstance(getBaseContext()).daemon();
         if (stat) {
-            EventBus.getDefault().post(new DaemonStatus(SERVICE_STATUS.started));
+            EventBus.getDefault().post(new DaemonStatus(Status.started));
         }
     }
 
     private void shutdown() throws IOException {
-        EventBus.getDefault().post(new DaemonStatus(SERVICE_STATUS.stopping));
+        EventBus.getDefault().post(new DaemonStatus(Status.stopping));
         IpfsExec.getInstance(getBaseContext()).shutDown();
-        EventBus.getDefault().post(new DaemonStatus(SERVICE_STATUS.stopped));
+        EventBus.getDefault().post(new DaemonStatus(Status.stopped));
     }
 
     private void restart() throws IOException {
         boolean stat = false;
-        EventBus.getDefault().post(new DaemonStatus(SERVICE_STATUS.stopping));
+        EventBus.getDefault().post(new DaemonStatus(Status.stopping));
         stat = IpfsExec.getInstance(getBaseContext()).shutDown();
         if (stat) {
-            EventBus.getDefault().post(new DaemonStatus(SERVICE_STATUS.stopped));
+            EventBus.getDefault().post(new DaemonStatus(Status.stopped));
         }
         try {
             Thread.sleep(500);
@@ -117,10 +120,10 @@ public class CmdIntentService extends IntentService {
 
         }
         stat = false;
-        EventBus.getDefault().post(new DaemonStatus(SERVICE_STATUS.starting));
+        EventBus.getDefault().post(new DaemonStatus(Status.starting));
         stat = IpfsExec.getInstance(getBaseContext()).daemon();
         if (stat) {
-            EventBus.getDefault().post(new DaemonStatus(SERVICE_STATUS.started));
+            EventBus.getDefault().post(new DaemonStatus(Status.started));
         }
     }
 }

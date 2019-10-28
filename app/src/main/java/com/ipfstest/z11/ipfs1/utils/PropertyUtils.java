@@ -1,4 +1,5 @@
-package com.ipfstest.z11.ipfs1;
+package com.ipfstest.z11.ipfs1.utils;
+
 import java.lang.reflect.Method;
 
 public class PropertyUtils {
