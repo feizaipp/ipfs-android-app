@@ -131,7 +131,7 @@ public class IpfsExec {
         }
     }
 
-    public Process command(String cmd) throws IOException {
+    private Process command(String cmd) throws IOException {
         String[] envp = new String[1];
         envp[0] = "IPFS_PATH=" + Constants.Dir.getSDdir(context) + "/.ipfsNode";
         String command = Constants.Dir.getLocalDir(context) + "/ipfsNode " + cmd;

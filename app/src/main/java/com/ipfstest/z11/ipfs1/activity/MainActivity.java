@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 case IPFSHttpAPI.HTTP_API_GET_SWARM_PEERS_COUNT:
                     int count = (int)msg.obj;
                     tv_info.setText("Discovered " + count);
-                    //mTimer.schedule(mTimerTask, 2000, 3000);
+                    mTimer.schedule(new MyTimerTask(), 3000);
                     break;
             }
         }
@@ -114,14 +114,13 @@ public class MainActivity extends AppCompatActivity {
     IPFSHttpAPI mHttpApi = new IPFSHttpAPI(mHandler);
 
 
-    private TimerTask mTimerTask = new TimerTask() {
+    class MyTimerTask extends TimerTask {
         @Override
         public void run() {
-            mHttpApi.getSwarmPeers();
+            mHttpApi.getSwarmPeersCount();
             Log.d(TAG, "timer");
-            mTimer.cancel();
         }
-    };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +178,35 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void daemonStarted() {
+        mHttpApi.getPeerID();
+        mHttpApi.getSwarmPeersCount();
+        tv_status.setText("Connected to IPFS");
+        tv_status.setVisibility(View.VISIBLE);
+        tv_info.setVisibility(View.VISIBLE);
+    }
+
+    private void daemonStoped() {
+        tv_status.setText("Stopped IPFS Daemon...");
+        tv_status.setVisibility(View.VISIBLE);
+        tv_info.setVisibility(View.INVISIBLE);
+        mAdapter.updateData(null);
+    }
+
+    private void daemonStarting() {
+        tv_status.setText("Connecting to IPFS...");
+        tv_status.setVisibility(View.VISIBLE);
+        tv_info.setVisibility(View.INVISIBLE);
+        mAdapter.updateData(null);
+    }
+
+    private void daemonStopping() {
+        tv_status.setText("Stopping IPFS Daemon...");
+        tv_status.setVisibility(View.VISIBLE);
+        tv_info.setVisibility(View.INVISIBLE);
+        mAdapter.updateData(null);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void MessageEvent(DaemonStatus mDS) {
         Status ds = mDS.getDaemonStatus();
@@ -189,12 +217,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(true);
                 mMenu.findItem(R.id.daemon_restart).setVisible(true);
                 mMenu.findItem(R.id.files).setVisible(true);
-                mTimer.schedule(mTimerTask, 2000, 3000);
-                mHttpApi.getPeerID();
-                mHttpApi.getSwarmPeersCount();
-                tv_status.setText("Connected to IPFS");
-                tv_status.setVisibility(View.VISIBLE);
-                tv_info.setVisibility(View.VISIBLE);
+                daemonStarted();
                 break;
             case stopped:
                 mMenu.findItem(R.id.daemon_status).setTitle("IPFS没有运行");
@@ -202,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(false);
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
+                daemonStoped();
                 break;
             case starting:
                 mMenu.findItem(R.id.daemon_status).setTitle("IPFS is starting");
@@ -209,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(false);
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
+                daemonStarting();
                 break;
             case stopping:
                 mMenu.findItem(R.id.daemon_status).setTitle("IPFS is stopping");
@@ -216,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(false);
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
+                daemonStopping();
                 break;
         }
     }
@@ -232,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         EventBus.getDefault().register(this);
         if (ProcessUtils.daemonStarted(MainActivity.this)) {
-            //mTimer.schedule(mTimerTask, 2000, 3000);
+            daemonStarted();
         }
     }
 
@@ -240,6 +266,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-        //mTimer.cancel();
+        mTimer.cancel();
     }
 }
