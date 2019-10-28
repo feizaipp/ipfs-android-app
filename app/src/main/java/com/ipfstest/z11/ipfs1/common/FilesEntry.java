@@ -9,11 +9,10 @@ public class FilesEntry {
     public FilesEntry() {
     }
 
-    public FilesEntry(String name, String hash, String size, String path) {
+    public FilesEntry(String name, String hash, String size) {
         this.name = name;
         this.hash = hash;
         this.size = size;
-        this.path = path;
     }
 
     public String getName() {

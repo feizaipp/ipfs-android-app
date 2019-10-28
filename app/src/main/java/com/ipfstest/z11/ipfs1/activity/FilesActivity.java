@@ -68,16 +68,15 @@ public class FilesActivity extends CheckPermissionsActivity {
 
                 case IPFSHttpAPI.HTTP_API_ADD_FILE:
                     List<MerkleNode> files = (List<MerkleNode>)msg.obj;
-                    for (int i=0; i<files.size(); i++) {
-                        Log.d(TAG, files.get(i).toJSONString());
-                    }
+                    MerkleNode file = files.get(0);
+                    addFileInfoToDB(file);
+
                     break;
 
                 case IPFSHttpAPI.HTTP_API_ADD_DIR:
                     List<MerkleNode> dirs = (List<MerkleNode>)msg.obj;
-                    for (int i=0; i<dirs.size(); i++) {
-                        Log.d(TAG, dirs.get(i).toJSONString());
-                    }
+                    MerkleNode dir = dirs.get(dirs.size() - 1);
+                    addFileInfoToDB(dir);
                     break;
             }
         }
@@ -85,8 +84,13 @@ public class FilesActivity extends CheckPermissionsActivity {
 
     IPFSHttpAPI mHttpApi = new IPFSHttpAPI(mHandler);
 
-    private void addFileInfoToDB(List<MerkleNode> addResult) {
-
+    private void addFileInfoToDB(MerkleNode addResult) {
+        String name = addResult.name.toString();
+        String hash = addResult.hash.toString();
+        String size = addResult.size.toString();
+        FilesEntry fe = new FilesEntry(name, hash, size);
+        insertSQL(fe);
+        mAdapter.updateData(quaryAll());
     }
 
     @Override
@@ -197,8 +201,7 @@ public class FilesActivity extends CheckPermissionsActivity {
             String name = cursor.getString(cursor.getColumnIndex("name"));
             String hash = cursor.getString(cursor.getColumnIndex("hash"));
             String size = cursor.getString(cursor.getColumnIndex("size"));
-            String path = cursor.getString(cursor.getColumnIndex("path"));
-            FilesEntry fe = new FilesEntry(name, hash, size, path);
+            FilesEntry fe = new FilesEntry(name, hash, size);
             aFe.add(fe);
         } while (cursor.moveToNext());
         database.close();
