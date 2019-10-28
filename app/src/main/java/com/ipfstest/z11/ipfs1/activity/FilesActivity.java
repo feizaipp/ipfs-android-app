@@ -216,14 +216,13 @@ public class FilesActivity extends CheckPermissionsActivity {
         mAdapter.setOnItemClickListener(new FileAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(FilesActivity.this, position + " click",
-                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(FilesActivity.this, WebActivity.class);
+                startActivity(intent);
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
-                Toast.makeText(FilesActivity.this, position + " long click",
-                        Toast.LENGTH_SHORT).show();
+                return;
             }
         });
     }
