@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.ipfstest.z11.ipfs1.R;
 import com.ipfstest.z11.ipfs1.adapter.PinAdapter;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.ipfs.api.MerkleNode;
+import io.ipfs.multihash.Multihash;
 
 public class PinActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
@@ -37,7 +40,7 @@ public class PinActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case IPFSHttpAPI.HTTP_API_GET_PINS:
-                    Map pins = (Map)msg.obj;
+                    Map<Multihash, Object> pins = (Map)msg.obj;
                     mAdapter.updateData(getData(pins));
                     break;
 
@@ -47,9 +50,20 @@ public class PinActivity extends AppCompatActivity {
 
     IPFSHttpAPI mHttpApi = new IPFSHttpAPI(mHandler);
 
-    private ArrayList<FilesEntry> getData(Map id) {
+    private ArrayList<FilesEntry> getData(Map<Multihash, Object> pins) {
         ArrayList<FilesEntry> aFe = new ArrayList<FilesEntry>();
         aFe.clear();
+        Log.d(TAG, pins.toString());
+        //Map<Multihash, Object>
+        for (Map.Entry<Multihash, Object> entry : pins.entrySet()) {
+
+            Log.d(TAG, "Key = " + entry.getKey() + ", Value = " + entry.getValue());
+            FilesEntry fe = new FilesEntry("", entry.getKey().toString(), "");
+            aFe.add(fe);
+
+        }
+
+
 
         return aFe;
     }
@@ -70,7 +84,11 @@ public class PinActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new PinAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                TextView mTvHash;
+                
+                mTvHash = (TextView) view.findViewById(R.id.hash);
                 Intent intent = new Intent(PinActivity.this, WebActivity.class);
+                intent.putExtra("hash", mTvHash.getText().toString());
                 startActivity(intent);
             }
 

@@ -11,4 +11,6 @@
         android:id="@+id/daemon_restart"/>
     <item android:title="文件"
         android:id="@+id/files"/>
+    <item android:title="Pins"
+        android:id="@+id/pin"/>
 </menu>

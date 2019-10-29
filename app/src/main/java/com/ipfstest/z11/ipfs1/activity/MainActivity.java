@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         mMenu.findItem(R.id.daemon_stop).setVisible(true);
         mMenu.findItem(R.id.daemon_restart).setVisible(true);
         mMenu.findItem(R.id.files).setVisible(true);
+        mMenu.findItem(R.id.pin).setVisible(true);
         if (!ProcessUtils.daemonStarted(MainActivity.this)) {
             CmdIntentService.startActionDaemon(MainActivity.this);
         }
@@ -172,6 +173,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.files:
                 startActivity(FilesActivity.class);
+                break;
+            case R.id.pin:
+                startActivity(PinActivity.class);
                 break;
         }
 
@@ -218,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(true);
                 mMenu.findItem(R.id.daemon_restart).setVisible(true);
                 mMenu.findItem(R.id.files).setVisible(true);
+                mMenu.findItem(R.id.pin).setVisible(true);
                 daemonStarted();
                 break;
             case stopped:
@@ -226,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(false);
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
+                mMenu.findItem(R.id.pin).setVisible(false);
                 daemonStoped();
                 break;
             case starting:
@@ -234,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(false);
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
+                mMenu.findItem(R.id.pin).setVisible(false);
                 daemonStarting();
                 break;
             case stopping:
@@ -242,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_stop).setVisible(false);
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
+                mMenu.findItem(R.id.pin).setVisible(false);
                 daemonStopping();
                 break;
         }
