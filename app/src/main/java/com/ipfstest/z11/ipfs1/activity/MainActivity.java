@@ -180,7 +180,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void daemonStarted() {
         mHttpApi.getPeerID();
-        mHttpApi.getSwarmPeersCount();
+        //mHttpApi.getSwarmPeersCount();
+        mTimer.schedule(new MyTimerTask(), 3000);
         tv_status.setText("Connected to IPFS");
         tv_status.setVisibility(View.VISIBLE);
         tv_info.setVisibility(View.VISIBLE);

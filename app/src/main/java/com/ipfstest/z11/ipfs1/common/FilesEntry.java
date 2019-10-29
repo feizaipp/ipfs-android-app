@@ -4,7 +4,6 @@ public class FilesEntry {
     private String name;
     private String hash;
     private String size;
-    private String path;
 
     public FilesEntry() {
     }
@@ -31,9 +30,9 @@ public class FilesEntry {
 
     @Override
     public String toString() {
-        return "StudentEntity{" +
+        return "FilesEntry{" +
                 "name='" + name + '\'' +
-                "hash='" + hash + '\'' +
+                ", hash='" + hash + '\'' +
                 ", size=" + size +
                 '}';
     }

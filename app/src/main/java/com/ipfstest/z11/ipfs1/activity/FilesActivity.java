@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ipfstest.z11.ipfs1.R;
@@ -37,9 +38,7 @@ import io.ipfs.api.MerkleNode;
 public class FilesActivity extends CheckPermissionsActivity {
 
     private static final String TABALENAME = "ipfs_files";
-    private static final String DBNAME = "ipfs.db";
-    private static final String CREATETABLE = "CREATE TABLE " + TABALENAME
-            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, hash TEXT, size TEXT)";
+    private static final String DBNAME = "ipfs2.db";
 
     private RecyclerView mRecyclerView;
     private FileAdapter mAdapter;
@@ -85,12 +84,13 @@ public class FilesActivity extends CheckPermissionsActivity {
     IPFSHttpAPI mHttpApi = new IPFSHttpAPI(mHandler);
 
     private void addFileInfoToDB(MerkleNode addResult) {
-        String name = addResult.name.toString();
+        String name = addResult.name.get();
         String hash = addResult.hash.toString();
-        String size = addResult.size.toString();
+        String size = addResult.size.isPresent()?addResult.size.get().toString():"0";
+        Log.d(TAG, "name: " + name + ", hash: " + hash + ", size: "+ size);
         FilesEntry fe = new FilesEntry(name, hash, size);
         insertSQL(fe);
-        mAdapter.updateData(quaryAll());
+        mAdapter.updateData(queryAll());
     }
 
     @Override
@@ -193,13 +193,16 @@ public class FilesActivity extends CheckPermissionsActivity {
         database.close();
     }
 
-    public ArrayList<FilesEntry> quaryAll() {
+    public ArrayList<FilesEntry> queryAll() {
         ArrayList<FilesEntry> aFe = new ArrayList<FilesEntry>();
         aFe.clear();
         FilesSQLiteOpenHelper mysql = new FilesSQLiteOpenHelper(this, DBNAME, 1);
         SQLiteDatabase database = mysql.getWritableDatabase();
         Cursor cursor = database.query(TABALENAME, null, null, null, null, null, null);
-        cursor.moveToFirst();
+        boolean isNull = cursor.moveToFirst();
+        if (!isNull) {
+            return null;
+        }
         do {
             String name = cursor.getString(cursor.getColumnIndex("name"));
             String hash = cursor.getString(cursor.getColumnIndex("hash"));
@@ -215,11 +218,14 @@ public class FilesActivity extends CheckPermissionsActivity {
 
     private void initData() {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mAdapter = new FileAdapter(quaryAll());
+        mAdapter = new FileAdapter(queryAll());
         mAdapter.setOnItemClickListener(new FileAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                TextView mTvHash;
+                mTvHash = (TextView) view.findViewById(R.id.hash);
                 Intent intent = new Intent(FilesActivity.this, WebActivity.class);
+                intent.putExtra("hash", mTvHash.getText().toString());
                 startActivity(intent);
             }
 

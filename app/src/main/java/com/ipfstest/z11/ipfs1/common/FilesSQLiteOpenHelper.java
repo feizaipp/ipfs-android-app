@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class FilesSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String TABALENAME = "ipfs_files";
     private static final String CREATETABLE = "CREATE TABLE " + TABALENAME
-            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, age INTEGER)";
+            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, hash TEXT, size TEXT)";
 
     public FilesSQLiteOpenHelper(Context context, String name, int version){
         super(context,name,null,version);
