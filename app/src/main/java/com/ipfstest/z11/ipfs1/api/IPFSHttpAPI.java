@@ -62,7 +62,7 @@ public class IPFSHttpAPI {
             public void run() {
                 IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
                 try {
-                    Map pins = ipfs.pin.ls();
+                    Map pins = ipfs.pin.ls(IPFS.PinType.recursive);
                     Log.d(TAG, pins.toString());
                     Message msg = Message.obtain();
                     msg.what = HTTP_API_GET_PINS;

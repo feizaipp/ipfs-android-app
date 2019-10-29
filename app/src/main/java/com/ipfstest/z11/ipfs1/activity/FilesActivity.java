@@ -101,6 +101,9 @@ public class FilesActivity extends CheckPermissionsActivity {
         selector = new FileSelector().setScreenOrientation(false).showHiddenFiles(true);
         selector.setTitle("文件选择器");
         selector.setOnFileSelectListener(listener);
+
+        initData();
+        initView();
     }
 
     OnFileSelectListener listener = new OnFileSelectListener() {

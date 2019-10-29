@@ -12,17 +12,16 @@ import com.ipfstest.z11.ipfs1.common.FilesEntry;
 
 import java.util.ArrayList;
 
-public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
+public class PinAdapter extends RecyclerView.Adapter<PinAdapter.ViewHolder> {
     private ArrayList<FilesEntry> mData;
-    private final static String TAG = "FileAdapter";
-    private OnItemClickListener mOnItemClickListener;
+    private final static String TAG = "PinAdapter";
+    private PinAdapter.OnItemClickListener mOnItemClickListener;
 
-    public FileAdapter(ArrayList<FilesEntry> data) {
+    public PinAdapter(ArrayList<FilesEntry> data) {
         this.mData = data;
     }
 
-    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener)
-    {
+    public void setOnItemClickListener(PinAdapter.OnItemClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;
     }
 
@@ -31,25 +30,23 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public interface OnItemClickListener
-    {
+    public interface OnItemClickListener {
         void onItemClick(View view, int position);
-        void onItemLongClick(View view , int position);
+
+        void onItemLongClick(View view, int position);
     }
 
-
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.files, parent, false);
-        ViewHolder viewHolder = new ViewHolder(v);
+    public PinAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.pin_files, parent, false);
+        PinAdapter.ViewHolder viewHolder = new PinAdapter.ViewHolder(v);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(PinAdapter.ViewHolder holder, int position) {
         FilesEntry fe = mData.get(position);
 
-        holder.mTvName.setText(fe.getName());
         holder.mTvHash.setText(fe.getHash());
         holder.mTvSize.setText(fe.getSize());
 
@@ -80,11 +77,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView mTvName, mTvHash, mTvSize;
+        TextView mTvHash, mTvSize;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mTvName = (TextView) itemView.findViewById(R.id.name);
             mTvHash = (TextView) itemView.findViewById(R.id.hash);
             mTvSize = (TextView) itemView.findViewById(R.id.size);
         }

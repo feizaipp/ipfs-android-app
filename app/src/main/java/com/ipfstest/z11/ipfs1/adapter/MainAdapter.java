@@ -30,9 +30,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // 实例化展示的view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.status, parent, false);
-        // 实例化viewholder
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
     }
@@ -41,7 +39,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (mData == null)
             return;
-        // 绑定数据
         String s1 = mData.keySet().toArray()[position].toString();
         String s2 = mData.get(s1);
         Log.d(TAG, s1 + "  " + position);
