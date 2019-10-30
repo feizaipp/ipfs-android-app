@@ -29,7 +29,7 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addr_setting:
-                startActivity(SetaddrActivity.class);
+                startActivity(SetAddrActivity.class);
                 break;
             case R.id.priv_net_setting:
                 startActivity(SetPrivNetActivity.class);

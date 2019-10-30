@@ -43,6 +43,10 @@ public class Constants {
         public static String getConfigPath(Context context) {
             return Constants.Dir.getSDdir(context) + "/.ipfsNode/config";
         }
+
+        public static String getKeyPath(Context context) {
+            return Constants.Dir.getSDdir(context) + "/.ipfsNode/swarm.key";
+        }
     }
 
 }

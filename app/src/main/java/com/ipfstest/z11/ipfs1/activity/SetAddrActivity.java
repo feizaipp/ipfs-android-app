@@ -14,28 +14,24 @@ import com.ipfstest.z11.ipfs1.R;
 import com.ipfstest.z11.ipfs1.api.IPFSHttpAPI;
 import com.ipfstest.z11.ipfs1.utils.Constants;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.List;
 import java.util.Map;
 
-import io.ipfs.api.MerkleNode;
-
-public class SetaddrActivity extends AppCompatActivity implements View.OnClickListener {
+public class SetAddrActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btn_reset;
     Button btn_set;
     EditText et_api;
     EditText et_gw;
-    private static final String TAG = "SetaddrActivity";
+    private static final String TAG = "SetAddrActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setaddr);
+        setContentView(R.layout.activity_set_addr);
 
         btn_reset = findViewById(R.id.btn_reset);
         btn_set = findViewById(R.id.btn_set);
