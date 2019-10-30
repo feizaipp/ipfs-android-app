@@ -177,6 +177,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.pin:
                 startActivity(PinActivity.class);
                 break;
+            case R.id.peer:
+                startActivity(PeersActivity.class);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -223,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_restart).setVisible(true);
                 mMenu.findItem(R.id.files).setVisible(true);
                 mMenu.findItem(R.id.pin).setVisible(true);
+                mMenu.findItem(R.id.peer).setVisible(true);
                 daemonStarted();
                 break;
             case stopped:
@@ -232,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
                 mMenu.findItem(R.id.pin).setVisible(false);
+                mMenu.findItem(R.id.peer).setVisible(false);
                 daemonStoped();
                 break;
             case starting:
@@ -241,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
                 mMenu.findItem(R.id.pin).setVisible(false);
+                mMenu.findItem(R.id.peer).setVisible(false);
                 daemonStarting();
                 break;
             case stopping:
@@ -250,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
                 mMenu.findItem(R.id.pin).setVisible(false);
+                mMenu.findItem(R.id.peer).setVisible(false);
                 daemonStopping();
                 break;
         }
