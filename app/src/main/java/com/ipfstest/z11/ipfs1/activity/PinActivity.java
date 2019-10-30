@@ -4,12 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.ipfstest.z11.ipfs1.R;
@@ -63,8 +68,6 @@ public class PinActivity extends AppCompatActivity {
 
         }
 
-
-
         return aFe;
     }
 
@@ -94,7 +97,28 @@ public class PinActivity extends AppCompatActivity {
 
             @Override
             public void onItemLongClick(View view, int position) {
-                return;
+                PopupMenu popup = new PopupMenu(PinActivity.this, view);
+                popup.getMenuInflater().inflate(R.menu.menu_pop, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.copy_hash:
+                                TextView mTvHash;
+                                mTvHash = (TextView) view.findViewById(R.id.hash);
+
+                                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData mClipData = ClipData.newPlainText("text", mTvHash.getText().toString());
+                                cm.setPrimaryClip(mClipData);
+                                break;
+                            case R.id.download:
+
+                                break;
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
             }
         });
     }

@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -231,7 +235,28 @@ public class FilesActivity extends CheckPermissionsActivity {
 
             @Override
             public void onItemLongClick(View view, int position) {
-                return;
+                PopupMenu popup = new PopupMenu(FilesActivity.this, view);
+                popup.getMenuInflater().inflate(R.menu.menu_pop, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.copy_hash:
+                                TextView mTvHash;
+                                mTvHash = (TextView) view.findViewById(R.id.hash);
+
+                                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData mClipData = ClipData.newPlainText("text", mTvHash.getText().toString());
+                                cm.setPrimaryClip(mClipData);
+                                break;
+                            case R.id.download:
+
+                                break;
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
             }
         });
     }
