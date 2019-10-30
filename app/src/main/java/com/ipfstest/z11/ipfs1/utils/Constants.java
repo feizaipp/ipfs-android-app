@@ -39,5 +39,10 @@ public class Constants {
         public static String getSDdir(Context context) {
             return context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
         }
+
+        public static String getConfigPath(Context context) {
+            return Constants.Dir.getSDdir(context) + "/.ipfsNode/config";
+        }
     }
+
 }
