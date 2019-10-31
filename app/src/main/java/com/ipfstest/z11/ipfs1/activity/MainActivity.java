@@ -284,4 +284,12 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
         mTimer.cancel();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (ProcessUtils.daemonStarted(MainActivity.this)) {
+            CmdIntentService.startActionShutdown(this);
+        }
+    }
 }
