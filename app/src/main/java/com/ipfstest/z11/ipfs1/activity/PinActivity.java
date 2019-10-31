@@ -26,11 +26,14 @@ import com.ipfstest.z11.ipfs1.common.MyDividerItemDecoration;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.wandersnail.fileselector.FileSelector;
+import cn.wandersnail.fileselector.OnFileSelectListener;
 import io.ipfs.api.MerkleNode;
 import io.ipfs.multihash.Multihash;
 
@@ -39,6 +42,7 @@ public class PinActivity extends AppCompatActivity {
     private PinAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private static final String TAG = "PinActivity";
+    FileSelector selector;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -76,9 +80,33 @@ public class PinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pin);
 
+        selector = new FileSelector().setScreenOrientation(false).showHiddenFiles(true);
+        selector.setTitle("文件选择器");
+
         initData();
         initView();
         mHttpApi.getPins();
+    }
+
+    OnFileSelectListener download_listener = new OnFileSelectListener() {
+        @Override
+        public void onFileSelect(int requestCode, List<String> paths) {
+            Log.d(TAG, "requestCode: " + requestCode);
+            switch (requestCode) {
+                case 2:
+                    File file = new File(paths.get(0));
+                    String name = file.getName();
+                    Log.d(TAG, name);
+
+                    break;
+            }
+        }
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        selector.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initData() {
@@ -112,7 +140,10 @@ public class PinActivity extends AppCompatActivity {
                                 cm.setPrimaryClip(mClipData);
                                 break;
                             case R.id.download:
-
+                                selector.setOnFileSelectListener(download_listener);
+                                selector.setMultiSelectionEnabled(true);
+                                selector.setSelectionMode(FileSelector.FILES_ONLY);
+                                selector.select(PinActivity.this, 2);
                                 break;
                         }
                         return true;

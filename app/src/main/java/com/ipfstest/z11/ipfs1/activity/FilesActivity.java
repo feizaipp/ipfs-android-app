@@ -70,14 +70,14 @@ public class FilesActivity extends CheckPermissionsActivity {
                     break;
 
                 case IPFSHttpAPI.HTTP_API_ADD_FILE:
-                    List<MerkleNode> files = (List<MerkleNode>)msg.obj;
+                    List<MerkleNode> files = (List<MerkleNode>) msg.obj;
                     MerkleNode file = files.get(0);
                     addFileInfoToDB(file);
 
                     break;
 
                 case IPFSHttpAPI.HTTP_API_ADD_DIR:
-                    List<MerkleNode> dirs = (List<MerkleNode>)msg.obj;
+                    List<MerkleNode> dirs = (List<MerkleNode>) msg.obj;
                     MerkleNode dir = dirs.get(dirs.size() - 1);
                     addFileInfoToDB(dir);
                     break;
@@ -90,8 +90,8 @@ public class FilesActivity extends CheckPermissionsActivity {
     private void addFileInfoToDB(MerkleNode addResult) {
         String name = addResult.name.get();
         String hash = addResult.hash.toString();
-        String size = addResult.size.isPresent()?addResult.size.get().toString():"0";
-        Log.d(TAG, "name: " + name + ", hash: " + hash + ", size: "+ size);
+        String size = addResult.size.isPresent() ? addResult.size.get().toString() : "0";
+        Log.d(TAG, "name: " + name + ", hash: " + hash + ", size: " + size);
         FilesEntry fe = new FilesEntry(name, hash, size);
         insertSQL(fe);
         mAdapter.updateData(queryAll());
@@ -104,7 +104,6 @@ public class FilesActivity extends CheckPermissionsActivity {
 
         selector = new FileSelector().setScreenOrientation(false).showHiddenFiles(true);
         selector.setTitle("文件选择器");
-        selector.setOnFileSelectListener(listener);
 
         initData();
         initView();
@@ -136,6 +135,21 @@ public class FilesActivity extends CheckPermissionsActivity {
         }
     };
 
+    OnFileSelectListener download_listener = new OnFileSelectListener() {
+        @Override
+        public void onFileSelect(int requestCode, List<String> paths) {
+            Log.d(TAG, "requestCode: " + requestCode);
+            switch (requestCode) {
+                case 2:
+                    File file = new File(paths.get(0));
+                    String name = file.getName();
+                    Log.d(TAG, name);
+
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -155,11 +169,13 @@ public class FilesActivity extends CheckPermissionsActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.add_file:
+                selector.setOnFileSelectListener(listener);
                 selector.setMultiSelectionEnabled(true);
                 selector.setSelectionMode(FileSelector.FILES_ONLY);
                 selector.select(FilesActivity.this, 1);
                 break;
             case R.id.add_folder:
+                selector.setOnFileSelectListener(listener);
                 selector.setMultiSelectionEnabled(true);
                 selector.setSelectionMode(FileSelector.DIRECTORIES_ONLY);
                 selector.select(FilesActivity.this, 4);
@@ -240,7 +256,7 @@ public class FilesActivity extends CheckPermissionsActivity {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()){
+                        switch (item.getItemId()) {
                             case R.id.copy_hash:
                                 TextView mTvHash;
                                 mTvHash = (TextView) view.findViewById(R.id.hash);
@@ -250,7 +266,10 @@ public class FilesActivity extends CheckPermissionsActivity {
                                 cm.setPrimaryClip(mClipData);
                                 break;
                             case R.id.download:
-
+                                selector.setOnFileSelectListener(download_listener);
+                                selector.setMultiSelectionEnabled(true);
+                                selector.setSelectionMode(FileSelector.FILES_ONLY);
+                                selector.select(FilesActivity.this, 2);
                                 break;
                         }
                         return true;
