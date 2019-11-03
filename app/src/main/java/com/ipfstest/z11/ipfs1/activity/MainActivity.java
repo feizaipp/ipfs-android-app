@@ -177,8 +177,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.pin:
                 startActivity(PinActivity.class);
                 break;
-            case R.id.peer:
+            case R.id.peers:
                 startActivity(PeersActivity.class);
+                break;
+            case R.id.config:
+                startActivity((ConfigActivity.class));
                 break;
         }
 
@@ -226,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_restart).setVisible(true);
                 mMenu.findItem(R.id.files).setVisible(true);
                 mMenu.findItem(R.id.pin).setVisible(true);
-                mMenu.findItem(R.id.peer).setVisible(true);
+                mMenu.findItem(R.id.peers).setVisible(true);
                 daemonStarted();
                 break;
             case stopped:
@@ -236,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
                 mMenu.findItem(R.id.pin).setVisible(false);
-                mMenu.findItem(R.id.peer).setVisible(false);
+                mMenu.findItem(R.id.peers).setVisible(false);
                 daemonStoped();
                 break;
             case starting:
@@ -246,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
                 mMenu.findItem(R.id.pin).setVisible(false);
-                mMenu.findItem(R.id.peer).setVisible(false);
+                mMenu.findItem(R.id.peers).setVisible(false);
                 daemonStarting();
                 break;
             case stopping:
@@ -256,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.daemon_restart).setVisible(false);
                 mMenu.findItem(R.id.files).setVisible(false);
                 mMenu.findItem(R.id.pin).setVisible(false);
-                mMenu.findItem(R.id.peer).setVisible(false);
+                mMenu.findItem(R.id.peers).setVisible(false);
                 daemonStopping();
                 break;
         }
@@ -282,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-        mTimer.cancel();
+        //mTimer.cancel();
     }
 
     @Override

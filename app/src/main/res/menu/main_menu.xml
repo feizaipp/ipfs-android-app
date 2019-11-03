@@ -15,4 +15,6 @@
         android:id="@+id/pin"/>
     <item android:title="节点"
         android:id="@+id/peers"/>
+    <item android:title="配置"
+        android:id="@+id/config"/>
 </menu>

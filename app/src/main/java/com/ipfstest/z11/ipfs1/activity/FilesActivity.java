@@ -1,6 +1,5 @@
 package com.ipfstest.z11.ipfs1.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,10 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ipfstest.z11.ipfs1.R;
-import com.ipfstest.z11.ipfs1.activity.CheckPermissionsActivity;
 import com.ipfstest.z11.ipfs1.adapter.FileAdapter;
 import com.ipfstest.z11.ipfs1.api.IPFSHttpAPI;
 import com.ipfstest.z11.ipfs1.common.FilesEntry;
@@ -33,7 +30,6 @@ import com.ipfstest.z11.ipfs1.common.MyDividerItemDecoration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import cn.wandersnail.fileselector.FileSelector;
 import cn.wandersnail.fileselector.OnFileSelectListener;
@@ -252,7 +248,7 @@ public class FilesActivity extends CheckPermissionsActivity {
             @Override
             public void onItemLongClick(View view, int position) {
                 PopupMenu popup = new PopupMenu(FilesActivity.this, view);
-                popup.getMenuInflater().inflate(R.menu.menu_pop, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.menu_pop_file, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {

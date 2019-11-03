@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/copy_hash" android:title="复制" />
+    <item android:id="@+id/download" android:title="下载" />
+    <item android:id="@+id/cancel_pin" android:title="取消固定" />
+</menu>

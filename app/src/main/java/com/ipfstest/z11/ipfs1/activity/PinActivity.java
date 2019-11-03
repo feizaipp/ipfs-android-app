@@ -23,18 +23,13 @@ import com.ipfstest.z11.ipfs1.api.IPFSHttpAPI;
 import com.ipfstest.z11.ipfs1.common.FilesEntry;
 import com.ipfstest.z11.ipfs1.common.MyDividerItemDecoration;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import cn.wandersnail.fileselector.FileSelector;
 import cn.wandersnail.fileselector.OnFileSelectListener;
-import io.ipfs.api.MerkleNode;
 import io.ipfs.multihash.Multihash;
 
 public class PinActivity extends AppCompatActivity {
@@ -52,7 +47,9 @@ public class PinActivity extends AppCompatActivity {
                     Map<Multihash, Object> pins = (Map)msg.obj;
                     mAdapter.updateData(getData(pins));
                     break;
-
+                case IPFSHttpAPI.HTTP_API_PIN_RM:
+                    mHttpApi.getPins();
+                    break;
             }
         }
     };
@@ -126,13 +123,13 @@ public class PinActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(View view, int position) {
                 PopupMenu popup = new PopupMenu(PinActivity.this, view);
-                popup.getMenuInflater().inflate(R.menu.menu_pop, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.menu_pop_pin, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
+                        TextView mTvHash;
                         switch (item.getItemId()){
                             case R.id.copy_hash:
-                                TextView mTvHash;
                                 mTvHash = (TextView) view.findViewById(R.id.hash);
 
                                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -144,6 +141,11 @@ public class PinActivity extends AppCompatActivity {
                                 selector.setMultiSelectionEnabled(true);
                                 selector.setSelectionMode(FileSelector.FILES_ONLY);
                                 selector.select(PinActivity.this, 2);
+                                break;
+                            case R.id.cancel_pin:
+                                mTvHash = (TextView) view.findViewById(R.id.hash);
+                                Multihash hash = Multihash.fromBase58(mTvHash.getText().toString());
+                                mHttpApi.pinRm(hash);
                                 break;
                         }
                         return true;

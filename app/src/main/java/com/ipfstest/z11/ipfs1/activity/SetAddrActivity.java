@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import com.ipfstest.z11.ipfs1.R;
 import com.ipfstest.z11.ipfs1.api.IPFSHttpAPI;
+import com.ipfstest.z11.ipfs1.service.CmdIntentService;
 import com.ipfstest.z11.ipfs1.utils.Constants;
 
 import org.json.JSONObject;
@@ -21,7 +22,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Map;
 
-public class SetAddrActivity extends AppCompatActivity implements View.OnClickListener {
+public class SetAddrActivity extends AppCompatActivity {
 
     Button btn_reset;
     Button btn_set;
@@ -35,6 +36,9 @@ public class SetAddrActivity extends AppCompatActivity implements View.OnClickLi
 
         btn_reset = findViewById(R.id.btn_reset);
         btn_set = findViewById(R.id.btn_set);
+        btn_reset.setOnClickListener(listener);
+        btn_set.setOnClickListener(listener);
+
         et_api = findViewById(R.id.et_api);
         et_gw = findViewById(R.id.et_gw);
 
@@ -59,16 +63,18 @@ public class SetAddrActivity extends AppCompatActivity implements View.OnClickLi
 
     IPFSHttpAPI mHttpApi = new IPFSHttpAPI(mHandler);
 
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_reset:
-                mHttpApi.getConfig();
-                break;
-            case R.id.btn_set:
-                mHttpApi.setConfig();
-                break;
+    Button.OnClickListener listener = new Button.OnClickListener() {
+        public void onClick(View v){
+            switch (v.getId()) {
+                case R.id.btn_reset:
+                    mHttpApi.getConfig();
+                    break;
+                case R.id.btn_set:
+                    mHttpApi.setConfig();
+                    break;
+            }
         }
-    }
+    };
 
     private void parseConfig(Map config) {
         try {
