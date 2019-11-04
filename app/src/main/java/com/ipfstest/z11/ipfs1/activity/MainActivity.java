@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private MainAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private final Timer mTimer = new Timer();
     private TextView tv_status;
     private TextView tv_info;
 
@@ -94,33 +93,25 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
 
-                case IPFSHttpAPI.HTTP_API_GET_PINS:
-
-                    break;
-
-                case IPFSHttpAPI.HTTP_API_GET_SWARM_PEERS:
-
-                    break;
-
                 case IPFSHttpAPI.HTTP_API_GET_SWARM_PEERS_COUNT:
                     int count = (int)msg.obj;
                     tv_info.setText("Discovered " + count);
-                    mTimer.schedule(new MyTimerTask(), 3000);
+                    tv_info.setVisibility(View.VISIBLE);
                     break;
             }
         }
     };
 
-    IPFSHttpAPI mHttpApi = new IPFSHttpAPI(mHandler);
-
-
-    class MyTimerTask extends TimerTask {
+    private Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void run() {
+        public boolean handleMessage(Message msg) {
             mHttpApi.getSwarmPeersCount();
-            Log.d(TAG, "timer");
+            handler.sendEmptyMessageDelayed(1, 3000);
+            return true;
         }
-    }
+    });
+
+    IPFSHttpAPI mHttpApi = new IPFSHttpAPI(mHandler);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
         mMenu.findItem(R.id.daemon_restart).setVisible(true);
         mMenu.findItem(R.id.files).setVisible(true);
         mMenu.findItem(R.id.pin).setVisible(true);
+        mMenu.findItem(R.id.peers).setVisible(true);
+        mMenu.findItem(R.id.config).setVisible(true);
         if (!ProcessUtils.daemonStarted(MainActivity.this)) {
             CmdIntentService.startActionDaemon(MainActivity.this);
         }
@@ -190,11 +183,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void daemonStarted() {
         mHttpApi.getPeerID();
-        //mHttpApi.getSwarmPeersCount();
-        mTimer.schedule(new MyTimerTask(), 3000);
+        handler.sendEmptyMessageDelayed(1, 3000);
         tv_status.setText("Connected to IPFS");
         tv_status.setVisibility(View.VISIBLE);
-        tv_info.setVisibility(View.VISIBLE);
+        tv_info.setVisibility(View.INVISIBLE);
     }
 
     private void daemonStoped() {
@@ -212,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void daemonStopping() {
+        handler.removeCallbacksAndMessages(null);
         tv_status.setText("Stopping IPFS Daemon...");
         tv_status.setVisibility(View.VISIBLE);
         tv_info.setVisibility(View.INVISIBLE);
@@ -230,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.files).setVisible(true);
                 mMenu.findItem(R.id.pin).setVisible(true);
                 mMenu.findItem(R.id.peers).setVisible(true);
+                mMenu.findItem(R.id.config).setVisible(true);
                 daemonStarted();
                 break;
             case stopped:
@@ -240,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.files).setVisible(false);
                 mMenu.findItem(R.id.pin).setVisible(false);
                 mMenu.findItem(R.id.peers).setVisible(false);
+                mMenu.findItem(R.id.config).setVisible(false);
                 daemonStoped();
                 break;
             case starting:
@@ -250,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.files).setVisible(false);
                 mMenu.findItem(R.id.pin).setVisible(false);
                 mMenu.findItem(R.id.peers).setVisible(false);
+                mMenu.findItem(R.id.config).setVisible(false);
                 daemonStarting();
                 break;
             case stopping:
@@ -260,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.files).setVisible(false);
                 mMenu.findItem(R.id.pin).setVisible(false);
                 mMenu.findItem(R.id.peers).setVisible(false);
+                mMenu.findItem(R.id.config).setVisible(false);
                 daemonStopping();
                 break;
         }
@@ -285,7 +282,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-        //mTimer.cancel();
     }
 
     @Override
