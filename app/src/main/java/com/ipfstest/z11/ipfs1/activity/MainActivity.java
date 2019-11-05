@@ -159,9 +159,11 @@ public class MainActivity extends AppCompatActivity {
                 CmdIntentService.startActionDaemon(MainActivity.this);
                 break;
             case R.id.daemon_stop:
+                handler.removeCallbacksAndMessages(null);
                 CmdIntentService.startActionShutdown(MainActivity.this);
                 break;
             case R.id.daemon_restart:
+                handler.removeCallbacksAndMessages(null);
                 CmdIntentService.startActionRestart(MainActivity.this);
                 break;
             case R.id.files:
@@ -204,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void daemonStopping() {
-        handler.removeCallbacksAndMessages(null);
         tv_status.setText("Stopping IPFS Daemon...");
         tv_status.setVisibility(View.VISIBLE);
         tv_info.setVisibility(View.INVISIBLE);
