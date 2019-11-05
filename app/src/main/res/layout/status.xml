@@ -10,8 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1.5"
-        android:gravity="center"
-        android:padding="8dp" />
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/info"
