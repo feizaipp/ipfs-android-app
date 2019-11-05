@@ -265,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void MessageEvent(ExecLog event) {
+        //Log.d(TAG, event.log);
         if (event.log.contains("shutdown")) {
             CmdIntentService.startActionDaemon(this);
         }
@@ -289,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (ProcessUtils.daemonStarted(MainActivity.this)) {
+            handler.removeCallbacksAndMessages(null);
             CmdIntentService.startActionShutdown(this);
         }
     }

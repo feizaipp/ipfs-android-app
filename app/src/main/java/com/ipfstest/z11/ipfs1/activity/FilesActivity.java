@@ -38,7 +38,7 @@ import io.ipfs.api.MerkleNode;
 public class FilesActivity extends CheckPermissionsActivity {
 
     private static final String TABALENAME = "ipfs_files";
-    private static final String DBNAME = "ipfs2.db";
+    private static final String DBNAME = "ipfs.db";
 
     private RecyclerView mRecyclerView;
     private FileAdapter mAdapter;
