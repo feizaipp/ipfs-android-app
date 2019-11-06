@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".activity.SetPrivNetActivity">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="7">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btn_reset">
+
         <EditText
+            android:id="@+id/et_pn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/et_pn"/>
+            android:layout_height="match_parent" />
     </ScrollView>
-    <LinearLayout
+
+    <Button
+        android:id="@+id/btn_reset"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="3">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="重置"
-            android:id="@+id/btn_reset"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="设置"
-            android:id="@+id/btn_set"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="添加密钥"
-            android:id="@+id/btn_add_key"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="删除密钥"
-            android:id="@+id/btn_del_key"/>
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_set"
+        android:text="重置" />
 
-    </LinearLayout>
+    <Button
+        android:id="@+id/btn_set"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_add_key"
+        android:text="设置" />
+
+    <Button
+        android:id="@+id/btn_add_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_del_key"
+        android:text="添加密钥" />
+
+    <Button
+        android:id="@+id/btn_del_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="删除密钥" />
 
 
-</LinearLayout>
+</RelativeLayout>

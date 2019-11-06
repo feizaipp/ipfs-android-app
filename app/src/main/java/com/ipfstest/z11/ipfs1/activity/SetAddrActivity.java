@@ -14,6 +14,7 @@ import com.ipfstest.z11.ipfs1.R;
 import com.ipfstest.z11.ipfs1.api.IPFSHttpAPI;
 import com.ipfstest.z11.ipfs1.service.CmdIntentService;
 import com.ipfstest.z11.ipfs1.utils.Constants;
+import com.ipfstest.z11.ipfs1.utils.JsonUtil;
 
 import org.json.JSONObject;
 
@@ -97,12 +98,10 @@ public class SetAddrActivity extends AppCompatActivity {
             String gw = et_gw.getText().toString();
             addr.put("API", api);
             addr.put("Gateway", gw);
-            object.put("Addresses", addr);
-            Log.d(TAG, object.toString());
 
             File file = new File(Constants.Dir.getConfigPath(this));
             BufferedWriter write = new BufferedWriter(new FileWriter(file));
-            write.write(object.toString());
+            write.write(JsonUtil.JsonFormat(object.toString()));
             write.close();
         } catch (Exception e) {
             e.printStackTrace();
