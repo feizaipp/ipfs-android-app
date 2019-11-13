@@ -20,7 +20,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.util.Map;
 
 public class SetAddrActivity extends AppCompatActivity {
@@ -42,43 +44,31 @@ public class SetAddrActivity extends AppCompatActivity {
 
         et_api = findViewById(R.id.et_api);
         et_gw = findViewById(R.id.et_gw);
-
-        mHttpApi.getConfig();
     }
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case IPFSHttpAPI.HTTP_API_GET_CONFIG:
-                    Map config = (Map)msg.obj;
-                    parseConfig(config);
-                    break;
-                case IPFSHttpAPI.HTTP_API_SET_CONFIG:
-                    Map cfg = (Map)msg.obj;
-                    setConfig(cfg);
-                    break;
-            }
-        }
-    };
-
-    IPFSHttpAPI mHttpApi = new IPFSHttpAPI(mHandler);
 
     Button.OnClickListener listener = new Button.OnClickListener() {
         public void onClick(View v){
             switch (v.getId()) {
                 case R.id.btn_reset:
-                    mHttpApi.getConfig();
+                    getConfig();
                     break;
                 case R.id.btn_set:
-                    mHttpApi.setConfig();
+                    setConfig();
                     break;
             }
         }
     };
 
-    private void parseConfig(Map config) {
+    private void getConfig() {
         try {
+            String configPath = Constants.Dir.getConfigPath(this);
+            File file = new File(configPath);
+            long len = file.length();
+            byte[] bytes = new byte[(int)len];
+            InputStream input = new FileInputStream(file);
+            input.read(bytes, 0, (int)len);
+            input.close();
+            String config = new String(bytes);
             JSONObject object = new JSONObject(config);
             JSONObject addr = object.getJSONObject("Addresses");
             String api = addr.getString("API");
@@ -90,16 +80,22 @@ public class SetAddrActivity extends AppCompatActivity {
         }
     }
 
-    private void setConfig(Map config) {
+    private void setConfig() {
         try {
+            String configPath = Constants.Dir.getConfigPath(this);
+            File file = new File(configPath);
+            long len = file.length();
+            byte[] bytes = new byte[(int)len];
+            InputStream input = new FileInputStream(file);
+            input.read(bytes, 0, (int)len);
+            input.close();
+            String config = new String(bytes);
             JSONObject object = new JSONObject(config);
             JSONObject addr = object.getJSONObject("Addresses");
             String api = et_api.getText().toString();
             String gw = et_gw.getText().toString();
             addr.put("API", api);
             addr.put("Gateway", gw);
-
-            File file = new File(Constants.Dir.getConfigPath(this));
             BufferedWriter write = new BufferedWriter(new FileWriter(file));
             write.write(JsonUtil.JsonFormat(object.toString()));
             write.close();
