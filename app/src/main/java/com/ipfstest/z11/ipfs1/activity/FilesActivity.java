@@ -136,7 +136,7 @@ public class FilesActivity extends CheckPermissionsActivity {
         public void onFileSelect(int requestCode, List<String> paths) {
             Log.d(TAG, "requestCode: " + requestCode);
             switch (requestCode) {
-                case 2:
+                case 3:
                     File file = new File(paths.get(0));
                     String name = file.getName();
                     Log.d(TAG, name);
@@ -263,9 +263,9 @@ public class FilesActivity extends CheckPermissionsActivity {
                                 break;
                             case R.id.download:
                                 selector.setOnFileSelectListener(download_listener);
-                                selector.setMultiSelectionEnabled(true);
-                                selector.setSelectionMode(FileSelector.FILES_ONLY);
-                                selector.select(FilesActivity.this, 2);
+                                selector.setMultiSelectionEnabled(false);
+                                selector.setSelectionMode(FileSelector.DIRECTORIES_ONLY);
+                                selector.select(FilesActivity.this, 3);
                                 break;
                         }
                         return true;
