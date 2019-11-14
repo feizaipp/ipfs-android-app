@@ -53,7 +53,7 @@ public class SetPrivNetActivity extends AppCompatActivity implements View.OnClic
         btn_del_key = findViewById(R.id.btn_del_key);
         et_pn = findViewById(R.id.et_pn);
 
-        mHttpApi.getConfig();
+        getConfig();
 
         selector = new FileSelector().setScreenOrientation(false).showHiddenFiles(true);
         selector.setTitle("文件选择器");
@@ -94,31 +94,13 @@ public class SetPrivNetActivity extends AppCompatActivity implements View.OnClic
         selector.onActivityResult(requestCode, resultCode, data);
     }
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case IPFSHttpAPI.HTTP_API_GET_CONFIG:
-                    Map config = (Map)msg.obj;
-                    parseConfig(config);
-                    break;
-                case IPFSHttpAPI.HTTP_API_SET_CONFIG:
-                    Map cfg = (Map)msg.obj;
-                    setConfig(cfg);
-                    break;
-            }
-        }
-    };
-
-    IPFSHttpAPI mHttpApi = new IPFSHttpAPI(mHandler);
-
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_reset:
-                mHttpApi.getConfig();
+                getConfig();
                 break;
             case R.id.btn_set:
-                mHttpApi.setConfig();
+                setConfig();
                 break;
             case R.id.btn_add_key:
                 selector.setMultiSelectionEnabled(true);
@@ -132,8 +114,16 @@ public class SetPrivNetActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void parseConfig(Map config) {
+    private void getConfig() {
         try {
+            String configPath = Constants.Dir.getConfigPath(this);
+            File file = new File(configPath);
+            long len = file.length();
+            byte[] bytes = new byte[(int)len];
+            InputStream input = new FileInputStream(file);
+            input.read(bytes, 0, (int)len);
+            input.close();
+            String config = new String(bytes);
             JSONObject object = new JSONObject(config);
             String bs = object.getString("Bootstrap");
             et_pn.setText(bs);
@@ -142,13 +132,19 @@ public class SetPrivNetActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void setConfig(Map config) {
+    private void setConfig() {
         try {
+            String configPath = Constants.Dir.getConfigPath(this);
+            File file = new File(configPath);
+            long len = file.length();
+            byte[] bytes = new byte[(int)len];
+            InputStream input = new FileInputStream(file);
+            input.read(bytes, 0, (int)len);
+            input.close();
+            String config = new String(bytes);
             JSONObject object = new JSONObject(config);
             String bs = et_pn.getText().toString();
             object.put("Bootstrap", bs);
-
-            File file = new File(Constants.Dir.getConfigPath(this));
             BufferedWriter write = new BufferedWriter(new FileWriter(file));
             write.write(JsonUtil.JsonFormat(object.toString()));
             write.close();

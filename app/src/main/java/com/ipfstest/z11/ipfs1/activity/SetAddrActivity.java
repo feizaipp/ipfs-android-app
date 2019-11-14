@@ -44,6 +44,8 @@ public class SetAddrActivity extends AppCompatActivity {
 
         et_api = findViewById(R.id.et_api);
         et_gw = findViewById(R.id.et_gw);
+
+        getConfig();
     }
 
     Button.OnClickListener listener = new Button.OnClickListener() {
