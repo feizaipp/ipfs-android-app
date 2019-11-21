@@ -109,7 +109,10 @@ public class IPFSHttpAPI {
                     List<Peer> peers = ipfs.swarm.peers();
                     Message msg = Message.obtain();
                     msg.what = HTTP_API_GET_SWARM_PEERS_COUNT;
-                    msg.obj = peers.size();
+                    if (peers == null)
+                        msg.obj = 0;
+                    else
+                        msg.obj = peers.size();
                     handler.sendMessage(msg);
 
                 } catch (IOException e) {

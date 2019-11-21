@@ -73,10 +73,12 @@ public class PeersActivity extends AppCompatActivity {
         ArrayList<PeersEntry> aPe = new ArrayList<PeersEntry>();
         aPe.clear();
 
-        for (int i=0; i<peers.size(); i++) {
-            Peer p = peers.get(i);
-            PeersEntry pe = new PeersEntry(p.address.toString(), p.id.toString());
-            aPe.add(pe);
+        if (peers != null) {
+            for (int i=0; i<peers.size(); i++) {
+                Peer p = peers.get(i);
+                PeersEntry pe = new PeersEntry(p.address.toString(), p.id.toString());
+                aPe.add(pe);
+            }
         }
 
         return aPe;
