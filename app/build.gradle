@@ -31,7 +31,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.github.zpehome:java-ipfs-http-client:1.2.3.5'
+    implementation 'com.github.feizaipp:java-ipfs-http-client:1.2.3.1'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation "com.github.bumptech.glide:glide:4.9.0"
     implementation "cn.wandersnail:common-utils:1.0.4"
