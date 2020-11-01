@@ -130,7 +130,7 @@ public class IPFSHttpAPI {
                 IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
                 try {
                     NamedStreamable.FileWrapper file = new NamedStreamable.FileWrapper(new File(path));
-                    List<MerkleNode> addResult = ipfs.add(file, false, false, false);
+                    List<MerkleNode> addResult = ipfs.add(file, false, false);
                     Message msg = Message.obtain();
                     if (type == 0) {
                         msg.what = HTTP_API_ADD_FILE;
@@ -148,25 +148,25 @@ public class IPFSHttpAPI {
         t.start();
     }
 
-    public void getRepoStat() {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
-                try {
-                    Map stat = ipfs.repo.stat();
-                    Message msg = Message.obtain();
-                    msg.what = HTTP_API_GET_REPO_STAT;
-                    msg.obj = stat;
-                    handler.sendMessage(msg);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        t.start();
-    }
+//    public void getRepoStat() {
+//        Thread t = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
+//                try {
+//                    Map stat = ipfs.repo.stat();
+//                    Message msg = Message.obtain();
+//                    msg.what = HTTP_API_GET_REPO_STAT;
+//                    msg.obj = stat;
+//                    handler.sendMessage(msg);
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//        t.start();
+//    }
 
     public void getConfig() {
         Thread t = new Thread(new Runnable() {
